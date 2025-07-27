@@ -2,11 +2,12 @@
 # define FACTOR_HPP
 
 #include <string>
+#include "Fraction.hpp"
 
 class Factor
 {
 	private:
-		uint64_t	mul;
+		Fraction	mul;
 		uint64_t	exp;
 
 	public:

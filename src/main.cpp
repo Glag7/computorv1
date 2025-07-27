@@ -31,4 +31,12 @@ int	main(int argc, char **argv)
 	a *= b;
 	std::cout << a << "\n";
 	std::cout << b << "\n";
+	try
+	{
+		throw std::make_pair(std::runtime_error("wow"), 2.);
+	}
+	catch (std::pair<std::runtime_error, double> &a)
+	{
+		std::cout << a.first.what() << "\n";
+	}
 }
