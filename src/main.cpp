@@ -5,7 +5,9 @@
 #include "Fraction.hpp"
 int	main(int argc, char **argv)
 {
-	if (argc != 2)
+	//pas de math !!!!!
+	//si argc 1 entree standard
+	if (argc != 2)//concatener args ?
 	{
 		std::cerr << "Usage: ./computorv1 \"[equation]\"\n";
 		return 1;
@@ -31,6 +33,7 @@ int	main(int argc, char **argv)
 	a *= b;
 	std::cout << a << "\n";
 	std::cout << b << "\n";
+	//std::cout << a + 2 << "\n";
 	try
 	{
 		throw std::make_pair(std::runtime_error("wow"), 2.);
@@ -39,4 +42,8 @@ int	main(int argc, char **argv)
 	{
 		std::cout << a.first.what() << "\n";
 	}
+	Fraction	frac = Fraction(std::stod(argv[1]));
+	std::cout << std::stod(argv[1]) << "\n";
+	std::cout << frac << "\n";
+	std::cout << frac.todouble() << "\n";
 }

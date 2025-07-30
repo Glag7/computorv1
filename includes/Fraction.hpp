@@ -14,8 +14,9 @@ struct	Fraction
 		int64_t	n;
 		int64_t	d;
 
-		Fraction(int64_t num);
+		explicit Fraction(int64_t num);
 		Fraction(int64_t n, int64_t d);
+		Fraction(double num);
 		Fraction(const Fraction &f);
 		
 		double		todouble() const {return static_cast<double>(n)/static_cast<double>(d);}

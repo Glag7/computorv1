@@ -1,49 +1,80 @@
+#include <limits>
 #include "Factor.hpp"
 
 Factor::Factor() :
-	mul(0),
+	mul(static_cast<int64_t>(0LL)),
 	exp(0)
 {
 }
 
 Factor::Factor(const std::string &s) :
-	mul(0),
-	exp(0)
+	mul(static_cast<int64_t>(1LL)),
+	exp(0)//0 ou 1 ?
 {
 	std::string	expr = s;
-	size_t		globalI = 0;
+	size_t		index = 0;
+	Status		status = Status::mul;
 
 	while (expr.length())
 	{
-		size_t	i;
-		double	d = std::stod(expr, &i);
-
-		if (i == 0)
+		size_t	readed = 0;
+		double	num = 0.;
+	
+		try
+		{
+			num = std::stod(expr, &readed);
+			//stocker le num en frac puis catch exception si le nbr est trop grand
+		}
+		catch (std::exception &e)
+		{
+			throw std::make_pair(e, index);
+		}
+/*
+		if (readed == 0)
 		{
 			switch (std::tolower(expr[0]))
 			{
 			case 'x':
-				exp += 1;
-				//incrementer i
-				if (expr[1] == '^' && std::isdigit(expr[2]))
-					exp += expr[2] - '0' - 1;
-					//throw
-				if (expr.length() > 2 && std::isdigit(expr[3]))
-					throw std::make_pair(std::runtime_error("exponent too large"), globalI + 3);
+				//trucs
+				num = 1.;
+				hasNum = true;
 				break;
 			case '*':
-				mul *= Fraction(d);//gnnnn nbr a virgule
+				if (!hasNum)
+					throw std::make_pair(std::runtime_error("expected number"), index);
+				hasNum = false;
+				isFrac = false;
 				break;
 			case '/':
-				mul *= Fraction(1, d);//gnnnn nbr a virgule
+				if (!hasNum)
+					throw std::make_pair(std::runtime_error("expected number"), index);
+				hasNum = false;
+				isFrac = false;
 				break;
 			default:
-				throw std::make_pair(std::runtime_error("unexpected character found"), i + globalI);
+				throw std::make_pair(std::runtime_error("unexpected character found"), index);
 			}
-			expr = expr.substr(i);
-			globalI += i;
 		}
 		else
-			//nombre
-	}
+		{
+			if (d != d || d == std::numeric_limits<double>::infinity()
+				|| d == -std::numeric_limits<double>::infinity())
+				throw std::make_pair(std::runtime_error("bad number found"), index);
+			num = d;
+			if (status == status::mul)
+				mul *= Fraction(num)
+			status = Status::num;
+		}
+		expr = expr.substr(readed);
+		index += readed;
+	*/}
+	exp = 111111;
+	if (status != Status::num)
+		throw std::make_pair(std::runtime_error("expected number"), index);
+}
+
+std::ostream	&operator<<(std::ostream &o, const Factor &f)
+{
+	o << f.mul << " * x^" << f.exp;
+	return o;
 }

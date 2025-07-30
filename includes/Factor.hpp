@@ -2,17 +2,29 @@
 # define FACTOR_HPP
 
 #include <string>
+#include <ostream>
 #include "Fraction.hpp"
 
-class Factor
+enum class Status
+{
+	num,
+	mul,
+	frac
+};
+
+
+struct Factor
 {
 	private:
-		Fraction	mul;
-		uint64_t	exp;
 
 	public:
+		Fraction	mul;
+		uint64_t	exp;
+		
 		Factor();
 		Factor(const std::string &s);
 };
+
+std::ostream	&operator<<(std::ostream &o, const Factor &f);
 
 #endif
