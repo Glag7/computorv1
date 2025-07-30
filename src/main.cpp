@@ -3,6 +3,9 @@
 #include "Equation.hpp"
 
 #include "Fraction.hpp"
+//FIXME
+//les doubles prennent juste trop de place
+//fix soit bigint (huh) soit parse a partir du string
 int	main(int argc, char **argv)
 {
 	//pas de math !!!!!
@@ -42,8 +45,13 @@ int	main(int argc, char **argv)
 	{
 		std::cout << a.first.what() << "\n";
 	}
-	Fraction	frac = Fraction(std::stod(argv[1]));
-	std::cout << std::stod(argv[1]) << "\n";
+	Fraction	frac = Fraction(0.001);
+	std::cout << frac << "\n";
+	std::cout << frac.todouble() << "\n";
+	frac *= 800;
+	std::cout << frac << "\n";
+	std::cout << frac.todouble() << "\n";
+	frac /= 800;
 	std::cout << frac << "\n";
 	std::cout << frac.todouble() << "\n";
 }

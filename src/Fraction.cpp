@@ -1,3 +1,4 @@
+#include <limits>
 #include "Fraction.hpp"
 
 Fraction::Fraction(int64_t num) :
@@ -13,8 +14,6 @@ Fraction::Fraction(int64_t n, int64_t d) :
 	reduce();
 }
 
-#include <iostream>
-#include <bitset>
 Fraction::Fraction(double num) : 
 	n(0),
 	d(1)
@@ -25,24 +24,24 @@ Fraction::Fraction(double num) :
 	int64_t		sign = (raw & (1ULL << 63)) ? -1 : 1;
 	unsigned	offset = 0;
 
-	std::cout << "double is " << num << "\n";
-	std::cout << "raw is " << std::bitset<64>(raw) << "\n";
-	std::cout << "exp is " << exp << "\n";
-	std::cout << "man is " << std::bitset<64>(man) << "\n";
 	if (raw == 0)
 		return;
 	while (!(man & (1ULL << offset)) && offset < 52)
 			++offset;
-	std::cout << "offset " << offset << "\n";
 	n = ((man >> offset) | (1ULL << (52 - offset))) * sign;
-	std::cout << "n is   " << std::bitset<64>(n) << "\n";
 	exp = exp - 52 + offset;
 	if (exp > 0)
-		n <<= exp;// - 52 + offset;
+	{
+		if (std::numeric_limits<int64_t>::max() >> exp < n)
+				throw std::overflow_error("number too big\n");
+		n <<= exp;
+	}
 	else
+	{
+		if (-exp > 63)
+				throw std::overflow_error("number too small (try using fractions)\n");
 		d <<= -exp;
-	std::cout << "n is " << std::bitset<64>(n) << "\n";
-	std::cout << "n is " << n << "\n";
+	}
 	reduce();
 }
 
