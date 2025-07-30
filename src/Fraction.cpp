@@ -22,6 +22,8 @@ Fraction::Fraction(double num) :
 	uint64_t	raw = *reinterpret_cast<uint64_t *>(&num);
 	int64_t		exp = static_cast<int64_t>((raw << 1 >> 53)) - 1023;
 	int64_t		man = static_cast<int64_t>(raw << 12 >> 12);
+	int64_t		sign = (raw & (1ULL << 63)) ? -1 : 1;
+	unsigned	offset = 0;
 
 	std::cout << "double is " << num << "\n";
 	std::cout << "raw is " << std::bitset<64>(raw) << "\n";
@@ -29,27 +31,16 @@ Fraction::Fraction(double num) :
 	std::cout << "man is " << std::bitset<64>(man) << "\n";
 	if (raw == 0)
 		return;
-	for (unsigned i = 0; i < 26; ++i)
-		n |= ((man & (1ULL << i)) << (51 - i * 2)) | ((man & (1ULL << (51 - i))) >> (51 - i * 2));
-	n = (n << 1) | 1;
-	if (raw & (1ULL << 63))
-		n *= -1;
-	std::cout << "n is " << std::bitset<64>(n) << "\n";
-	std::cout << "n is " << n << "\n";
-	//max exp ?
-	int64_t test = n;
-	int64_t c = 0;
-	while (test)
-	{
-		test >>= 1;
-		c++;
-	}
-	std::cout << "c " << c << "\n";
-	std::cout << "exp " << exp << "\n";
+	while (!(man & (1ULL << offset)) && offset < 52)
+			++offset;
+	std::cout << "offset " << offset << "\n";
+	n = ((man >> offset) | (1ULL << (52 - offset))) * sign;
+	std::cout << "n is   " << std::bitset<64>(n) << "\n";
+	exp = exp - 52 + offset;
 	if (exp > 0)
-		n <<= (exp - c + 1);
+		n <<= exp;// - 52 + offset;
 	else
-		d <<= -exp + c - 1;
+		d <<= -exp;
 	std::cout << "n is " << std::bitset<64>(n) << "\n";
 	std::cout << "n is " << n << "\n";
 	reduce();
