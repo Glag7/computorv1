@@ -137,6 +137,31 @@ void	Fraction::operator/=(const Fraction &f)
 	reduce();
 }
 
+bool	Fraction::operator==(const Fraction &f) const
+{
+	return (*this - f).n == 0;
+}
+
+bool	Fraction::operator>=(const Fraction &f) const
+{
+	return (*this - f).n >= 0;
+}
+
+bool	Fraction::operator>(const Fraction &f) const
+{
+	return (*this - f).n > 0;
+}
+
+bool	Fraction::operator<=(const Fraction &f) const
+{
+	return (*this - f).n <= 0;
+}
+
+bool	Fraction::operator<(const Fraction &f) const
+{
+	return (*this - f).n < 0;
+}
+
 Fraction	stofrac(const std::string &s, size_t *idx, size_t pos)
 {
 	Fraction	frac(static_cast<int64_t>(0));
