@@ -9,7 +9,8 @@ enum class Status
 {
 	num,
 	mul,
-	frac
+	div,
+	pow
 };
 
 

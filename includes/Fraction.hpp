@@ -2,6 +2,7 @@
 # define FRACTION_HPP
 
 #include <cstdint>
+#include <string>
 #include <ostream>
 
 struct	Fraction
@@ -14,9 +15,9 @@ struct	Fraction
 		int64_t	n;
 		int64_t	d;
 
-		explicit Fraction(int64_t num);
+		Fraction(int64_t num);
 		Fraction(int64_t n, int64_t d);
-		Fraction(double num);
+		explicit Fraction(double num);
 		Fraction(const Fraction &f);
 		
 		double		todouble() const {return static_cast<double>(n)/static_cast<double>(d);}
@@ -32,6 +33,7 @@ struct	Fraction
 		void		operator/=(const Fraction &f);
 };
 
+Fraction		stofrac(const std::string &s, size_t *idx, size_t pos = 0);
 std::ostream	&operator<<(std::ostream &o, const Fraction &f);
 
 #endif

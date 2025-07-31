@@ -33,7 +33,7 @@ Fraction::Fraction(double num) :
 	if (exp > 0)
 	{
 		if (std::numeric_limits<int64_t>::max() >> exp < n)
-				throw std::overflow_error("number too big\n");
+				throw std::overflow_error("number too large\n");
 		n <<= exp;
 	}
 	else
@@ -49,6 +49,7 @@ Fraction::Fraction(const Fraction &f) :
 	n(f.n),
 	d(f.d)
 {
+	reduce();
 }
 
 int64_t	Fraction::gcd(int64_t a, int64_t b) const
@@ -136,8 +137,41 @@ void	Fraction::operator/=(const Fraction &f)
 	reduce();
 }
 
+Fraction	stofrac(const std::string &s, size_t *idx, size_t pos)
+{
+	Fraction	frac(static_cast<int64_t>(0));
+	bool		neg = (s[pos] == '-');
+
+	if (s[pos] == '+' || s[pos] == '-')
+		++pos;
+	while (std::isdigit(s[pos]))
+	{
+		if (frac.n - 4 > (std::numeric_limits<int64_t>::max() - s[pos]) / 10)
+			throw std::overflow_error("number too large");
+		frac.n = frac.n * 10 + s[pos++] - '0';
+	}
+	if (s[pos] == '.')
+		++pos;
+	while (std::isdigit(s[pos]))
+	{
+		if (frac.n - 4 > (std::numeric_limits<int64_t>::max() - s[pos]) / 10
+			|| frac.d > std::numeric_limits<int64_t>::max() / 10)
+			throw std::overflow_error("number too large");
+		frac.n = frac.n * 10 + s[pos++] - '0';
+		frac.d *= 10;
+	}
+	if (neg)
+		frac.n *= -1;
+	if (idx)
+		*idx = pos;
+	return Fraction(frac);
+}
+
 std::ostream	&operator<<(std::ostream &o, const Fraction &f)
 {
-	o << "(" << f.n << "/" << f.d << ")";
+	if (f.d == 1)
+		o << f.n;
+	else
+		o << "(" << f.n << "/" << f.d << ")";
 	return o;
 }

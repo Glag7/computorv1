@@ -2,7 +2,8 @@
 #include <string>
 #include "Equation.hpp"
 
-#include "Fraction.hpp"
+#include <algorithm>
+#include "Factor.hpp"
 //FIXME
 //les doubles prennent juste trop de place
 //fix soit bigint (huh) soit parse a partir du string
@@ -18,14 +19,23 @@ int	main(int argc, char **argv)
 
 	Equation	eq;
 
+	std::string s = argv[1];
+	s.erase(std::remove(s.begin(), s.end(), ' '), s.end());
 	try
 	{
-		eq = Equation(argv[1]);
-		std::cout << "\n";
+		//eq = Equation(argv[1]);
+		//std::cout << "\n";
+		Factor	fac = Factor(s);
+		std::cout << fac << "\n";
+		return 0;
 	}
-	catch (std::exception &e)
+	catch (std::pair<std::runtime_error, size_t> &p)
 	{
-		std::cerr << "Error: " << e.what() << "\n";
+		std::cerr << s << "\n";
+		for (int i = 0; i < p.second; ++i)
+			std::cout << " ";
+		std::cout << "^\n";
+		std::cerr << "Error: " << p.first.what() << "\n";
 		return 1;
 	}
 	//return 0;
@@ -45,13 +55,24 @@ int	main(int argc, char **argv)
 	{
 		std::cout << a.first.what() << "\n";
 	}
-	Fraction	frac = Fraction(0.001);
-	std::cout << frac << "\n";
-	std::cout << frac.todouble() << "\n";
-	frac *= 800;
-	std::cout << frac << "\n";
-	std::cout << frac.todouble() << "\n";
-	frac /= 800;
-	std::cout << frac << "\n";
-	std::cout << frac.todouble() << "\n";
+	try
+	{
+		Fraction	frac = Fraction(std::stod(argv[1]));
+		std::cout << frac << "\n";
+		std::cout << frac.todouble() << "\n";
+	}
+	catch (...)
+	{
+		std::cout << "nuhuh\n";
+	}
+	try
+	{
+		Fraction	frac2 = stofrac(argv[1], NULL);
+		std::cout << frac2 << "\n";
+		std::cout << frac2.todouble() << "\n";
+	}
+	catch (...)
+	{
+		std::cout << "nuhuh\n";
+	}
 }
