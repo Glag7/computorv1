@@ -34,6 +34,8 @@ Factor	Factor::operator/(const Fraction &n) const
 void	Factor::operator*=(const Fraction &n)
 {
 	mul *= n;
+	if (mul == 0)
+		exp = 0;
 }
 
 void	Factor::operator/=(const Fraction &n)
@@ -45,14 +47,24 @@ Factor	Factor::operator+(const Factor &f) const
 {
 	if (exp != f.exp)
 		throw std::logic_error("cannot add different exponents");
-	return Factor(mul + f.mul, exp);
+
+	Factor	fac(mul + f.mul, exp);
+
+	if (fac.mul == 0)
+		fac.exp = 0;
+	return f;
 }
 
 Factor	Factor::operator-(const Factor &f) const
 {
 	if (exp != f.exp)
 		throw std::logic_error("cannot add different exponents");
-	return Factor(mul - f.mul, exp);
+
+	Factor	fac(mul - f.mul, exp);
+
+	if (fac.mul == 0)
+		fac.exp = 0;
+	return f;
 }
 
 void	Factor::operator+=(const Factor &f)
@@ -60,6 +72,8 @@ void	Factor::operator+=(const Factor &f)
 	if (exp != f.exp)
 		throw std::logic_error("cannot add different exponents");
 	mul += f.mul;
+	if (mul == 0)
+		exp = 0;
 }
 
 void	Factor::operator-=(const Factor &f)
@@ -67,6 +81,8 @@ void	Factor::operator-=(const Factor &f)
 	if (exp != f.exp)
 		throw std::logic_error("cannot add different exponents");
 	mul += f.mul;
+	if (mul == 0)
+		exp = 0;
 }
 
 bool	Factor::operator==(const Factor &f) const

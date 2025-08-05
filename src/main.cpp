@@ -22,6 +22,12 @@ int	main(int argc, char **argv)
 		std::cout << eq << "\n";
 		eq.sort();
 		std::cout << eq << "\n";
+		eq.simplify();
+		std::cout << eq << "\n";
+		eq.oneside();
+		std::cout << eq << "\n";
+		eq.simplify();
+		std::cout << eq << "\n";
 	}
 	catch (std::pair<std::runtime_error, size_t> &p)
 	{

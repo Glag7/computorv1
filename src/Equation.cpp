@@ -48,6 +48,7 @@ Equation::Equation(const std::string &s)
 			if (eqfound)
 				throw std::make_pair(std::runtime_error("too many sides"), newi);
 			eqfound = true;
+			mul = 1;
 			i = s.find_first_not_of(" ", newi + 1);
 			newi = s.find_first_of("+-=", i);
 			if (newi == i)
@@ -76,10 +77,42 @@ void	Equation::sort()
 	std::sort(right.rbegin(), right.rend());
 }
 
-//sort
-//simplifier
-//tout du meme cote
-//solve
+//must be sorted
+void	Equation::simplify()
+{
+	simplifySide(left);
+	simplifySide(right);
+}
+
+void	Equation::simplifySide(std::vector<Factor> &side)
+{
+	std::vector<Factor>::iterator	i = side.begin();
+	std::vector<Factor>::iterator	j = side.begin() + 1;
+
+	while (j < side.end())
+	{
+		while (j < side.end() && i->exp == j->exp)
+		{
+			*i += *j;
+			j = side.erase(j);
+		}
+		if (i->mul == 0 && side.size() > 1)
+			i = side.erase(i);
+		else
+			++i;
+		j = i + 1;
+	}
+}
+
+void	Equation::oneside()
+{
+	for (auto &f : right)
+		f *= -1;
+	left.insert(left.end(), right.begin(), right.end());
+	std::sort(left.rbegin(), left.rend());
+	right.clear();
+	right.push_back(Factor(0, 0));
+}
 
 std::ostream	&operator<<(std::ostream &o, const Equation &e)
 {
