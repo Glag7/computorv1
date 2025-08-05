@@ -5,6 +5,21 @@ Equation::Equation()
 {
 }
 
+static Factor	factorIndexWrapper(const std::string &s, size_t i)
+{
+	Factor	f;
+
+	try
+	{
+		f = Factor(s);
+	}
+	catch (std::pair<std::runtime_error, size_t> &p)
+	{
+		throw std::make_pair(p.first, i + p .second);
+	}
+	return f;
+}
+
 Equation::Equation(const std::string &s)
 {
 	size_t	i = s.find_first_not_of(" ");
@@ -25,16 +40,8 @@ Equation::Equation(const std::string &s)
 	}
 	while (newi != std::string::npos)
 	{
-		Factor	f;
-
-		try
-		{
-			f = Factor(s.substr(i, newi - i)) * mul;
-		}
-		catch (std::pair<std::runtime_error, size_t> &p)
-		{
-			throw std::make_pair(p.first, i + p .second);
-		}
+		Factor	f = factorIndexWrapper(s.substr(i, newi - i), i) * mul;
+		
 		(eqfound) ? right.push_back(f) : left.push_back(f);
 		if (s[newi] == '=')
 		{
@@ -57,15 +64,8 @@ Equation::Equation(const std::string &s)
 		i = newi + 1;
 		newi = s.find_first_of("+-=", i);
 	}
-	try
-	{
-		if (eqfound)
-			right.push_back(Factor(s.substr(i, newi - i)) * mul);
-	}
-	catch (std::pair<std::runtime_error, size_t> &p)
-	{
-		throw std::make_pair(p.first, i + p .second);
-	}
+	if (eqfound)
+		right.push_back(factorIndexWrapper(s.substr(i, newi - i), i) * mul);
 	if (right.empty())
 		throw std::make_pair(std::runtime_error("missing right side"), s.length());
 }
