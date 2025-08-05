@@ -169,6 +169,8 @@ Fraction	stofrac(const std::string &s, size_t *idx, size_t pos)
 
 	if (s[pos] == '+' || s[pos] == '-')
 		++pos;
+	if (s[pos] == '.' && !std::isdigit(s[pos + 1]))
+		return frac;
 	while (std::isdigit(s[pos]))
 	{
 		if (frac.n - 4 > (std::numeric_limits<int64_t>::max() - s[pos]) / 10)
