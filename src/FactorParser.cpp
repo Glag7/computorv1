@@ -114,4 +114,6 @@ void	Factor::FactorParser::parse(const std::string &s)
 	}
 	if (status != Status::num && status != Status::pow)
 		throw std::make_pair(std::runtime_error("expected number"), index);
+	if (f.mul == 0)
+		f.exp = 0;
 }
