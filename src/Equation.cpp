@@ -5,49 +5,69 @@ Equation::Equation()
 {
 }
 
-#include <iostream>
-Equation::Equation(const std::string &s)//check signe a la fin, ++ += etc
-{//FIXME check les espaces
+Equation::Equation(const std::string &s)
+{
 	size_t	i = s.find_first_not_of(" ");
-	bool	eq = false;
-	int64_t	lastmul = 1;
+	size_t	newi = i;
+	int64_t	mul = 1;
+	bool	eqfound = false;
 
 	if (i == std::string::npos)
-		throw std::make_pair(std::runtime_error("where equation"), static_cast<size_t>(0));
-	if (s[i] == '=')
-		throw std::make_pair(std::runtime_error("missing left side"), i);
-	lastmul = (s[i] == '-') ? -1 : 1;
-	i += (s[i] == '-' || s[i] == '+');
-	while (i != std::string::npos)
+		throw std::make_pair(std::runtime_error("where equation"), static_cast<size_t>(0));	
+	newi = s.find_first_of("+-=", i);
+	if (newi == i)
 	{
-		size_t	newindex = s.find_first_of("+-=", i);
-		char	op = (newindex == std::string::npos) ? s[newindex] : '+';
-		Factor	f = Factor(s.substr(i, newindex - i));
+		if (s[i] == '=')
+			throw std::make_pair(std::runtime_error("missing left side"), i);
+		if (s[i] == '-')
+			mul = -1;
+		newi = s.find_first_of("+-=", ++i);
+	}
+	while (newi != std::string::npos)
+	{
+		Factor	f;
 
-		f *= lastmul;
-		if (eq)
+		try
 		{
-			right.push_back(f);
-			if (op == '=')
-				throw std::make_pair(std::runtime_error("too many sides"), newindex);
+			f = Factor(s.substr(i, newi - i)) * mul;
 		}
-		else
+		catch (std::pair<std::runtime_error, size_t> &p)
 		{
-			left.push_back(f);
-			eq = op == '=';
-			if (eq)
+			throw std::make_pair(p.first, i + p .second);
+		}
+		(eqfound) ? right.push_back(f) : left.push_back(f);
+		if (s[newi] == '=')
+		{
+			if (eqfound)
+				throw std::make_pair(std::runtime_error("too many sides"), newi);
+			eqfound = true;
+			i = s.find_first_not_of(" ", newi + 1);
+			newi = s.find_first_of("+-=", i);
+			if (newi == i)
 			{
-				newindex = s.find_first_not_of(" ", newindex + 1);
-				op = (newindex == std::string::npos) ? s[newindex] : '+';
-				if (op == '=')
-					throw std::make_pair(std::runtime_error("too many sides"), newindex);
+				if (s[i] == '=')
+					throw std::make_pair(std::runtime_error("too many sides"), i);
+				if (s[i] == '-')
+					mul = -1;
+				newi = s.find_first_of("+-=", ++i);
 			}
+			continue;
 		}
-		lastmul = (op == '-') ? -1 : 1;
-		i = newindex + newindex != std::string::npos;
+		mul = (s[newi] == '-') ? -1 : 1;
+		i = newi + 1;
+		newi = s.find_first_of("+-=", i);
+	}
+	try
+	{
+		if (eqfound)
+			right.push_back(Factor(s.substr(i, newi - i)) * mul);
+	}
+	catch (std::pair<std::runtime_error, size_t> &p)
+	{
+		throw std::make_pair(p.first, i + p .second);
 	}
 	if (right.empty())
-		throw std::make_pair(std::runtime_error("missing right side"), i);
+		throw std::make_pair(std::runtime_error("missing right side"), s.length());
 }
 
 //sort
@@ -57,10 +77,15 @@ Equation::Equation(const std::string &s)//check signe a la fin, ++ += etc
 
 std::ostream	&operator<<(std::ostream &o, const Equation &e)
 {
-	for (const Factor &f : e.left)
-		o << f << " ";
-	o << "=";
-	for (const Factor &f : e.right)
-		o << " " << f;
+	auto	it = e.left.begin();
+
+	o << *it;
+	while (++it != e.left.end())
+		o << " + " << *it;
+	o << " = ";
+	it = e.right.begin();
+	o << *it;
+	while (++it != e.right.end())
+		o << " + " << *it;
 	return o;
 }
