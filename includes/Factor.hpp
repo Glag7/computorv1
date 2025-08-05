@@ -26,6 +26,12 @@ struct Factor
 		Factor	operator-(const Factor &f) const;
 		void	operator+=(const Factor &f);
 		void	operator-=(const Factor &f);
+		bool	operator==(const Factor &f) const;
+		bool	operator!=(const Factor &f) const;
+		bool	operator>(const Factor &f) const;
+		bool	operator>=(const Factor &f) const;
+		bool	operator<(const Factor &f) const;
+		bool	operator<=(const Factor &f) const;
 };
 
 std::ostream	&operator<<(std::ostream &o, const Factor &f);

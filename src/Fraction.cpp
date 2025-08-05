@@ -142,6 +142,11 @@ bool	Fraction::operator==(const Fraction &f) const
 	return (*this - f).n == 0;
 }
 
+bool	Fraction::operator!=(const Fraction &f) const
+{
+	return (*this - f).n != 0;
+}
+
 bool	Fraction::operator>=(const Fraction &f) const
 {
 	return (*this - f).n >= 0;

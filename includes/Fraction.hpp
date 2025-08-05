@@ -32,6 +32,7 @@ struct	Fraction
 		void		operator*=(const Fraction &f);
 		void		operator/=(const Fraction &f);
 		bool		operator==(const Fraction &f) const;
+		bool		operator!=(const Fraction &f) const;
 		bool		operator>=(const Fraction &f) const;
 		bool		operator>(const Fraction &f) const;
 		bool		operator<=(const Fraction &f) const;

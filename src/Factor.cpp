@@ -69,6 +69,44 @@ void	Factor::operator-=(const Factor &f)
 	mul += f.mul;
 }
 
+bool	Factor::operator==(const Factor &f) const
+{
+	return mul == f.mul && exp == f.exp;
+}
+
+bool	Factor::operator!=(const Factor &f) const
+{
+	return mul != f.mul || exp != f.exp;
+}
+
+bool	Factor::operator>(const Factor &f) const
+{
+	if (exp == f.exp)
+		return mul > f.mul;
+	return exp > f.exp;
+}
+
+bool	Factor::operator>=(const Factor &f) const
+{
+	if (exp == f.exp)
+		return mul >= f.mul;
+	return exp >= f.exp;
+}
+
+bool	Factor::operator<(const Factor &f) const
+{
+	if (exp == f.exp)
+		return mul < f.mul;
+	return exp < f.exp;
+}
+
+bool	Factor::operator<=(const Factor &f) const
+{
+	if (exp == f.exp)
+		return mul <= f.mul;
+	return exp <= f.exp;
+}
+
 std::ostream	&operator<<(std::ostream &o, const Factor &f)
 {
 	switch (f.exp)
@@ -77,10 +115,14 @@ std::ostream	&operator<<(std::ostream &o, const Factor &f)
 		o << f.mul;
 		break;
 	case 1:
-		o << f.mul << " * x";
+		if (f.mul != 1)
+			o << f.mul << " * ";
+		o << "x";
 		break;
 	default:
-		o << f.mul << " * x^" << f.exp;
+		if (f.mul != 1)
+			o << f.mul << " * ";
+		o << "x^" << f.exp;
 		break;
 	}
 	return o;
