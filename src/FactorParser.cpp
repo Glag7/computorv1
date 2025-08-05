@@ -92,6 +92,9 @@ void	Factor::FactorParser::parse(const std::string &s)
 		{
 			switch (std::tolower(s[newidx]))
 			{
+			case ' ':
+				++newidx;
+				break;
 			case 'x':
 				parseX(s, &newidx);
 				break;
