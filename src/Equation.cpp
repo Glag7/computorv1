@@ -70,6 +70,12 @@ Equation::Equation(const std::string &s)
 		throw std::make_pair(std::runtime_error("missing right side"), s.length());
 }
 
+void	Equation::sort()
+{
+	std::sort(left.rbegin(), left.rend());
+	std::sort(right.rbegin(), right.rend());
+}
+
 //sort
 //simplifier
 //tout du meme cote

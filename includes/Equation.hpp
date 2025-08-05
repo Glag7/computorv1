@@ -16,6 +16,8 @@ class	Equation
 		Equation();
 		Equation(const std::string &s);
 
+		void	sort();
+
 		friend std::ostream	&operator<<(std::ostream &o, const Equation &e);
 };
 

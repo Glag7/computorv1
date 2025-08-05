@@ -20,6 +20,8 @@ int	main(int argc, char **argv)
 		eq = Equation(s);
 		std::cout << s << "\n";
 		std::cout << eq << "\n";
+		eq.sort();
+		std::cout << eq << "\n";
 	}
 	catch (std::pair<std::runtime_error, size_t> &p)
 	{
