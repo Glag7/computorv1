@@ -15,7 +15,17 @@ struct Factor
 		int64_t	exp;
 		
 		Factor();
+		Factor(Fraction mul, int64_t exp);
 		Factor(const std::string &s);
+
+		Factor	operator*(const Fraction &n) const;
+		Factor	operator/(const Fraction &n) const;
+		void	operator*=(const Fraction &n);
+		void	operator/=(const Fraction &n);
+		Factor	operator+(const Factor &f) const;
+		Factor	operator-(const Factor &f) const;
+		void	operator+=(const Factor &f);
+		void	operator-=(const Factor &f);
 };
 
 std::ostream	&operator<<(std::ostream &o, const Factor &f);
@@ -43,6 +53,7 @@ class Factor::FactorParser
 
 	public:
 		FactorParser(Factor &f);
+
 		void	parse(const std::string &s);
 };
 

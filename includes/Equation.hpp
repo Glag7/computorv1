@@ -1,19 +1,24 @@
 #ifndef EQUATION_HPP
 # define EQUATION_HPP
 
-#include <utility>
+#include <ostream>
 #include <vector>
 #include <string>
+#include "Factor.hpp"
 
 class	Equation
 {
 	private:
-		std::vector<std::pair<unsigned, unsigned>>	left;
-		std::vector<std::pair<unsigned, unsigned>>	right;
+		std::vector<Factor>	left;
+		std::vector<Factor>	right;
 		
 	public:
 		Equation();
 		Equation(const std::string &s);
+
+		friend std::ostream	&operator<<(std::ostream &o, const Equation &e);
 };
+
+std::ostream	&operator<<(std::ostream &o, const Equation &e);
 
 #endif
