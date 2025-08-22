@@ -71,23 +71,41 @@ Equation::Equation(const std::string &s)
 		throw std::make_pair(std::runtime_error("missing right side"), s.length());
 }
 
-void	Equation::sort()
+bool	Equation::sort()
 {
+	auto left2 = left;
+	auto right2 = right;
+
 	std::sort(left.rbegin(), left.rend());
 	std::sort(right.rbegin(), right.rend());
+	for (size_t i = 0; i < left.size(); ++i)
+	{
+		if (left[i] != left2[i])
+			return true;
+	}
+	for (size_t i = 0; i < right.size(); ++i)
+	{
+		if (right[i] != right2[i])
+			return true;
+	}
+	return false;
 }
 
 //must be sorted
-void	Equation::simplify()
+bool	Equation::simplify()
 {
-	simplifySide(left);
-	simplifySide(right);
+	bool	changed = false;
+
+	changed |= simplifySide(left);
+	changed |= simplifySide(right);
+	return changed;
 }
 
-void	Equation::simplifySide(std::vector<Factor> &side)
+bool	Equation::simplifySide(std::vector<Factor> &side)
 {
 	std::vector<Factor>::iterator	i = side.begin();
 	std::vector<Factor>::iterator	j = side.begin() + 1;
+	bool				changed = false;
 
 	while (j < side.end())
 	{
@@ -95,6 +113,7 @@ void	Equation::simplifySide(std::vector<Factor> &side)
 		{
 			*i += *j;
 			j = side.erase(j);
+			changed = true;
 		}
 		if (i->mul == 0 && side.size() > 1)
 			i = side.erase(i);
@@ -102,16 +121,20 @@ void	Equation::simplifySide(std::vector<Factor> &side)
 			++i;
 		j = i + 1;
 	}
+	return changed;
 }
 
-void	Equation::oneside()
+bool	Equation::oneside()
 {
+	if (right.size() == 1 && right[0] == Factor(0, 0))
+		return false;
 	for (auto &f : right)
 		f *= -1;
 	left.insert(left.end(), right.begin(), right.end());
 	std::sort(left.rbegin(), left.rend());
 	right.clear();
 	right.push_back(Factor(0, 0));
+	return true;
 }
 
 std::ostream	&operator<<(std::ostream &o, const Equation &e)

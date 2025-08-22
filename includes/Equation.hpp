@@ -12,15 +12,15 @@ class	Equation
 		std::vector<Factor>	left;
 		std::vector<Factor>	right;
 
-		void	simplifySide(std::vector<Factor> &side);
+		bool	simplifySide(std::vector<Factor> &side);
 		
 	public:
 		Equation();
 		Equation(const std::string &s);
 
-		void	sort();
-		void	simplify();
-		void	oneside();
+		bool	sort();
+		bool	simplify();
+		bool	oneside();
 
 		friend std::ostream	&operator<<(std::ostream &o, const Equation &e);
 };
