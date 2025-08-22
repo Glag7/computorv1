@@ -2,6 +2,7 @@
 #include <string>
 #include "Equation.hpp"
 
+//TODO sqrt
 int	main(int argc, char **argv)
 {
 	//pas de math !!!!!
@@ -28,6 +29,7 @@ int	main(int argc, char **argv)
 			std::cout << eq << "\n";
 		if (eq.simplify())
 			std::cout << eq << "\n";
+		eq.solve(std::cout);
 	}
 	catch (std::pair<std::runtime_error, size_t> &p)
 	{

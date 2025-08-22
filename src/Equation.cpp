@@ -1,5 +1,7 @@
 #include <algorithm>
+#include <iomanip>
 #include "Equation.hpp"
+#include "badmath.h"
 
 Equation::Equation()
 {
@@ -137,6 +139,109 @@ bool	Equation::oneside()
 	right.clear();
 	right.push_back(Factor(0, 0));
 	return true;
+}
+
+//must be sorted, everything on one non empty side
+void	Equation::solve(std::ostream &o)
+{
+	int64_t	degree = left[0].exp;
+
+	if (degree > 2 || left[left.size() - 1].exp < 0)
+	{
+		o << "Polynomial degree: " << degree << "\nI don't know. Good luck !\n";
+		return;
+	}
+
+	Fraction	f(0, 1);
+
+	left.push_back(Factor(0, 0));
+	left.push_back(Factor(0, 0));
+	switch (degree)
+	{
+	case 0:
+		o << ((left[0].mul == 0) ? "Any real number is a solution.\n" : "There are no solutions.\n");
+		break;
+	case 1:
+		f = left[1].mul * -1 / left[0].mul;
+		o << "Polynomial degree: 1\nThe solution is " << f;
+		if (f.d != 1)
+			o << " ~= " << std::setprecision(15) << f.todouble();
+	   	o << "\n";
+		break;
+	case 2:
+		f = left[1].mul * left[1].mul - left[0].mul * left[2].mul * 4;
+		solve2(o, f);
+		break;
+	}
+	left.erase(left.end());
+	left.erase(left.end());
+}
+
+void	Equation::solve2(std::ostream &o, const Fraction &det)
+{
+	Fraction	nodet = left[1].mul * -1 / (left[0].mul * 2);
+
+	o << "Discriminant: " << det << "\n";
+	if (det == 0)
+	{
+		o << "There is one solution: " << nodet;
+		if (nodet.d != 1)
+			o << " ~= " << std::setprecision(15) << nodet.todouble();
+		o << "\n";
+		return;
+	}
+
+	double		detSqrt = bad::sqrtd(bad::abs(det.todouble()));
+	Fraction	detSqrtI = bad::sqrti(bad::abs(det.n));
+	bool		isWhole = det.d == 1
+				&& detSqrtI * detSqrtI == bad::abs(det);
+
+	if (det < 0)
+	{
+		o << "Discriminant < 0, there are two solutions: \n";
+		if (isWhole)
+		{
+			detSqrtI /= left[0].mul * 2;
+			o << nodet << " + " << detSqrtI << "i";
+			if (nodet.d != 1 || detSqrtI.d != 1)
+				o << " ~= " << nodet.todouble() << " + " << detSqrtI.todouble() << "i";
+			o << "\n";
+			o << nodet << " - " << detSqrtI << "i";
+			if (nodet.d != 1 || detSqrtI.d != 1)
+				o << " ~= " << nodet.todouble() << " - " << detSqrtI.todouble() << "i";
+			o << "\n";
+		}
+		else
+		{
+			o << nodet << " + (sqrt(" << det * -1 << ")/" << left[0].mul * 2 << ")i";
+			o << " ~= " << nodet.todouble() << " + " << detSqrt / (left[0].mul.todouble() * 2.) << "i\n";
+			o << nodet << " - (sqrt(" << det * -1 << ")/" << left[0].mul * 2 << ")i";
+			o << " ~= " << nodet.todouble() << " - " << detSqrt / (left[0].mul.todouble() * 2.) << "i\n";
+		}
+		return;
+	}
+	o << "Discriminant > 0, there are two solutions: \n";
+	if (isWhole)
+	{
+		detSqrtI /= left[0].mul * 2;
+		o << nodet + detSqrtI;
+		if ((nodet + detSqrtI).d != 1)
+			o << " ~= " << (nodet + detSqrtI).todouble();
+		o << "\n";
+		o << nodet - detSqrtI;
+		if ((nodet + detSqrtI).d != 1)
+			o << " ~= " << (nodet - detSqrtI).todouble();
+		o << "\n";
+	}
+	else
+	{//TODO finir
+	 //FIXME faire les divisions directement dans la fraction pour les complexes
+	 //FIXME sqrt denominateur ? decomposition facteur premiers ?
+		o << nodet << " + sqrt" << det / (left[0].mul * 2);
+		o << " ~= " << nodet.todouble() << " + " << detSqrt / (left[0].mul.todouble() * 2.) << "i\n";
+		o << nodet << " - (sqrt(" << det * -1 << ")/" << left[0].mul * 2 << ")i";
+		o << " ~= " << nodet.todouble() << " - " << detSqrt / (left[0].mul.todouble() * 2.) << "i\n";
+	}
 }
 
 std::ostream	&operator<<(std::ostream &o, const Equation &e)

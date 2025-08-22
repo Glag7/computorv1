@@ -13,6 +13,7 @@ class	Equation
 		std::vector<Factor>	right;
 
 		bool	simplifySide(std::vector<Factor> &side);
+		void	solve2(std::ostream &o, const Fraction &det);
 		
 	public:
 		Equation();
@@ -21,6 +22,7 @@ class	Equation
 		bool	sort();
 		bool	simplify();
 		bool	oneside();
+		void	solve(std::ostream &o);
 
 		friend std::ostream	&operator<<(std::ostream &o, const Equation &e);
 };
