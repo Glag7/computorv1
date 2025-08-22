@@ -53,6 +53,8 @@ Equation::Equation(const std::string &s)
 			newi = s.find_first_of("+-=", i);
 			if (newi == i)
 			{
+				if (i == std::string::npos)
+					throw std::make_pair(std::runtime_error("missing right side"), s.length());
 				if (s[i] == '=')
 					throw std::make_pair(std::runtime_error("too many sides"), i);
 				if (s[i] == '-')
