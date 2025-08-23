@@ -5,16 +5,16 @@
 
 namespace bad
 {
-		uint64_t	sqrti(uint64_t n);
-		double		sqrtd(double d);
+	uint64_t	sqrti(uint64_t n);
+	double		sqrtd(double d);
 
-		template <typename t>
-		t	abs(const t& n)
-		{
-			if (n < 0)
-					return n * -1;
-			return n;
-		};
+	template <typename t>
+	t	abs(const t& n)
+	{
+		if (n < 0)
+				return n * -1;
+		return n;
+	};
 }
 
 #endif

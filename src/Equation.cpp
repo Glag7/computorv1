@@ -181,6 +181,7 @@ void	Equation::solve2(std::ostream &o, const Fraction &det)
 {
 	Fraction	nodet = left[1].mul * -1 / (left[0].mul * 2);
 
+	o << "Polynomial degree: 2\n";
 	o << "Discriminant: " << det << "\n";
 	if (det == 0)
 	{
@@ -234,13 +235,11 @@ void	Equation::solve2(std::ostream &o, const Fraction &det)
 		o << "\n";
 	}
 	else
-	{//TODO finir
-	 //FIXME faire les divisions directement dans la fraction pour les complexes
-	 //FIXME sqrt denominateur ? decomposition facteur premiers ?
-		o << nodet << " + sqrt" << det / (left[0].mul * 2);
-		o << " ~= " << nodet.todouble() << " + " << detSqrt / (left[0].mul.todouble() * 2.) << "i\n";
-		o << nodet << " - (sqrt(" << det * -1 << ")/" << left[0].mul * 2 << ")i";
-		o << " ~= " << nodet.todouble() << " - " << detSqrt / (left[0].mul.todouble() * 2.) << "i\n";
+	{
+		o << nodet << " + (sqrt(" << det << ")/" << left[0].mul * 2 << ")";
+		o << " ~= " << nodet.todouble() + detSqrt / (left[0].mul.todouble() * 2.) << "\n";
+		o << nodet << " - (sqrt(" << det << ")/" << left[0].mul * 2 << ")";
+		o << " ~= " << nodet.todouble() - detSqrt / (left[0].mul.todouble() * 2.) << "\n";
 	}
 }
 
