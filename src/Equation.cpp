@@ -200,12 +200,12 @@ void	Equation::solve2(std::ostream &o, const Fraction &det)
 	bool		isWhole = det.d == 1
 				&& detSqrtI * detSqrtI == bad::abs(det);
 
+	detSqrtI /= left[0].mul * 2;
 	if (det < 0)
 	{
 		o << "Discriminant < 0, there are two solutions: \n";
 		if (isWhole)
 		{
-			detSqrtI /= left[0].mul * 2;
 			o << nodet << " + " << detSqrtI << "i";
 			if (nodet.d != 1 || detSqrtI.d != 1)
 				o << " ~= " << nodet.todouble() << " + " << detSqrtI.todouble() << "i";
@@ -227,13 +227,12 @@ void	Equation::solve2(std::ostream &o, const Fraction &det)
 	o << "Discriminant > 0, there are two solutions: \n";
 	if (isWhole)
 	{
-		detSqrtI /= left[0].mul * 2;
 		o << nodet + detSqrtI;
 		if ((nodet + detSqrtI).d != 1)
 			o << " ~= " << (nodet + detSqrtI).todouble();
 		o << "\n";
 		o << nodet - detSqrtI;
-		if ((nodet + detSqrtI).d != 1)
+		if ((nodet - detSqrtI).d != 1)
 			o << " ~= " << (nodet - detSqrtI).todouble();
 		o << "\n";
 	}
