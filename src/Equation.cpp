@@ -169,7 +169,10 @@ void	Equation::solve(std::ostream &o)
 	   	o << "\n";
 		break;
 	case 2:
-		f = left[1].mul * left[1].mul - left[0].mul * left[2].mul * 4;
+		if (left[1].exp == 1)
+			f = left[1].mul * left[1].mul - left[0].mul * left[2].mul * 4;
+		else
+			f = left[0].mul * left[1].mul * -4;
 		solve2(o, f);
 		break;
 	}
@@ -179,7 +182,7 @@ void	Equation::solve(std::ostream &o)
 
 void	Equation::solve2(std::ostream &o, const Fraction &det)
 {
-	Fraction	nodet = left[1].mul * -1 / (left[0].mul * 2);
+	Fraction	nodet = (left[1].exp == 1) ? left[1].mul * -1 / (left[0].mul * 2) : 0;
 
 	o << "Polynomial degree: 2\n";
 	o << "Discriminant: " << det << "\n";

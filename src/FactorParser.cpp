@@ -73,6 +73,8 @@ void	Factor::FactorParser::parseFrac(Fraction &frac)
 		f.mul *= frac;
 		break;
 	case Status::div:
+		if (frac == 0)
+			throw std::make_pair(std::runtime_error("division by 0 found"), index);
 		f.mul /= frac;
 		break;
 	default:
